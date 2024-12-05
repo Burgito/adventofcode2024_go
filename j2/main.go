@@ -1,24 +1,11 @@
 package main
 
 import (
-	"bufio"
+	"adventofcode/arrays"
+	"adventofcode/inputreaders"
 	"fmt"
-	"os"
 	"strconv"
-	"strings"
 )
-
-func appendValuesFromLine(report []int, line []string) []int {
-	for _, value := range line {
-		intValue, err := strconv.Atoi(value)
-		if err != nil {
-			panic(err)
-		}
-		report = append(report, intValue)
-	}
-
-	return report
-}
 
 func iAbsDiff(a int, b int) int {
 	if a < b {
@@ -70,12 +57,6 @@ func levelsAreUnsafe(increase bool, value1 int, value2 int) bool {
 	return false
 }
 
-func removeIndex(s []int, index int) []int {
-	ret := make([]int, 0)
-	ret = append(ret, s[:index]...)
-	return append(ret, s[index+1:]...)
-}
-
 func isReportSafe(slice []int) bool {
 	length := len(slice)
 
@@ -98,18 +79,9 @@ func isReportSafe(slice []int) bool {
 }
 
 func part1() {
-	f, err := os.Open("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
+	reports := inputreaders.ReadIntegersPerLines("./input.txt", " ")
 	totalSafe := 0
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		report := []int{}
-		line := strings.Split(scanner.Text(), " ")
-		report = appendValuesFromLine(report, line)
-
+	for _, report := range reports {
 		if isReportSafe(report) {
 			totalSafe += 1
 		}
@@ -119,23 +91,14 @@ func part1() {
 }
 
 func part2() {
-	f, err := os.Open("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
+	reports := inputreaders.ReadIntegersPerLines("./input.txt", " ")
 	totalSafe := 0
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		report := []int{}
-		line := strings.Split(scanner.Text(), " ")
-		report = appendValuesFromLine(report, line)
-
+	for _, report := range reports {
 		if isReportSafe(report) {
 			totalSafe += 1
 		} else {
 			for idx := range report {
-				if isReportSafe(removeIndex(report, idx)) {
+				if isReportSafe(arrays.RemoveIndexFromIntArray(report, idx)) {
 					totalSafe += 1
 					break
 				}
