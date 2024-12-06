@@ -34,6 +34,21 @@ func ReadLinesAsStrings(filePath string) []string {
 	return lines
 }
 
+func ReadFullFileAsString(filePath string) string {
+	f, err := os.Open(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	scanner := bufio.NewScanner(f)
+	fileContent := ""
+	for scanner.Scan() {
+		fileContent += scanner.Text()
+	}
+
+	return fileContent
+}
+
 func ReadIntegersPerLines(filePath string, separator string) [][]int {
 	lines := ReadLinesAsStrings(filePath)
 	intsLines := [][]int{}
